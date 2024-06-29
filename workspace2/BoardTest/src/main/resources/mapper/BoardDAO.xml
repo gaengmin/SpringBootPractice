@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.gaeng.dao.BoardDAO">
+	<select id="getBoardList" resultType="BoardDTO">
+		select no, title, name, regdate, readcount
+		from article
+		order by no desc
+	</select>
+	
+	<insert
+		id="insertData" parameterType="BoardDTO">
+		insert into article(name, title, content, password)
+		values( #{name}, #{title}, #{content}, #{password} )
+	</insert>
+	
+	<select
+		id="getDetailList" resultType="BoardDTO">
+		select no, title, name, regdate, readcount, content
+		from article
+		where no = #{no}
+	</select>
+	
+	<select
+		id="modifyDataList" resultType="BoardDTO">
+		select no ,title, password, name, regdate, readcount, content
+		from article
+		where no = #{no}
+	</select>
+
+	<update id="updateData" parameterType="BoardDTO">
+			update ARTICLE
+			set name = #{name},
+			title = #{title}, CONTENT= #{content}
+	where no = #{no} and PASSWORD = #{password}
+</update>
+
+	<delete id="deleteBoard" parameterType="BoardDTO">
+		DELETE article
+		WHERE no = #{no}
+		AND password = #{password}
+	</delete>
+
+	<update id="updateReadCount" parameterType="BoardDTO">
+		UPDATE article
+		set readcount = article.readcount +1
+		where no = #{no}
+	</update>
+
+	<select id="paging" parameterType="BoardDTO">
+        SELECT *
+        FROM article
+        order by no desc
+        OFFSET (#{offset}-1)*5 ROWS FETCH NEXT 5 ROWS ONLY
+    </select>
+
+	<select id="totalCount" resultType="int">
+		select count(*) from article
+	</select>
+</mapper>
